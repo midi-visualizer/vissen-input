@@ -1,0 +1,31 @@
+module Vissen
+  module Input
+    module Message
+      # Control Change
+      #
+      #
+      class ControlChange < Base
+        STATUS = 0xB0
+      
+        def number
+          data[1]
+        end
+      
+        def value
+          data[2]
+        end
+      
+        class << self          
+          # Matcher
+          #
+          # The control change message is special in that it is only valid when
+          # the second byte takes values lower than 120. We therefore need to
+          # override Base.matcher.
+          def matcher
+            Matcher.new(self) { |d| (d[0] & MASK) == STATUS && d[1] < 120 }
+          end
+        end
+      end
+    end
+  end
+end
