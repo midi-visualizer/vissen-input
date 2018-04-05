@@ -67,20 +67,31 @@ module Vissen
           # Note that status and channel are masked using the default masks, and
           # not the constants that may have been defined by a subclass.
           def create(*bytes, status: 0, channel: 0, timestamp: Time.now.to_f)
-            raise ArgumentError unless bytes.length >= self::DATA_LENGTH - 1
+            raise ArgumentError if bytes.length >= self::DATA_LENGTH
             
+            validate_status status
             validate_channel channel
+            
+            data = Array.new self::DATA_LENGTH, 0
             
             # Note: this line line must reference
             #       STATUS_MASK and not self::STATUS_MASK
-            data = [(status & STATUS_MASK) + (channel & CHANNEL_MASK), *bytes]
+            data[0] = (status & STATUS_MASK) + (channel & CHANNEL_MASK)
+            
+            # Copy the bytes
+            bytes.each_with_index { |value, index| data[index + 1] = value }
+            
             new data, timestamp
           end
           
           protected
           
+          def validate_status(status)
+            raise RangeError unless (status & ~STATUS_MASK) == 0
+          end
+          
           def validate_channel(channel)
-            raise RangeError unless (0...16).include? channel
+            raise RangeError unless (channel & ~CHANNEL_MASK) == 0
           end
         end
       end

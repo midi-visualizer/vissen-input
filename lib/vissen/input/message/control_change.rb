@@ -15,14 +15,16 @@ module Vissen
           data[2]
         end
       
-        class << self          
+        class << self
           # Matcher
           #
           # The control change message is special in that it is only valid when
           # the second byte takes values lower than 120. We therefore need to
           # override Base.matcher.
           def matcher
-            Matcher.new(self) { |d| (d[0] & MASK) == STATUS && d[1] < 120 }
+            Matcher.new(self) do |d|
+              (d[0] & STATUS_MASK) == STATUS && d[1] < 120
+            end
           end
         end
       end
