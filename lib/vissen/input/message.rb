@@ -11,6 +11,10 @@ module Vissen
     # All Vissen Input Messages must be representable by one to three bytes.
     # This stems from the tight connection with the MIDI protocol. Each message
     # must also store a timestamp from when the input arrived to the system.
+    #
+    # The individual message implementations are based off the information given
+    # on the [midi association website](https://www.midi.org/specifications/item/table-1-summary-of-midi-message).
+    #
     module Message
       STATUS_MASK  = 0xF0
       CHANNEL_MASK = 0x0F

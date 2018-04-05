@@ -76,13 +76,19 @@ describe Vissen::Input::Message::Base do
       factory = subject.factory
       t       = timestamp
       
+      # To get the channel mode message we need byte 1 to
+      # equal or be greater than 120.
+      b1 = ->(k) { k == Vissen::Input::Message::ChannelMode ? 120 : 0 }
+      
       [
         Vissen::Input::Message::Aftertouch,
+        Vissen::Input::Message::ChannelPressure,
+        Vissen::Input::Message::ChannelMode,
         Vissen::Input::Message::ControlChange,
         Vissen::Input::Message::Note,
         Vissen::Input::Message::PitchBendChange,
         Vissen::Input::Message::ProgramChange,
-      ].each { |k| assert_kind_of k, factory.build([k::STATUS, 0, 0], t) }
+      ].each { |k| assert_kind_of k, factory.build([k::STATUS, b1[k], 0], t) }
 
       assert_kind_of Vissen::Input::Message::Unknown,
                      factory.build([0, 0, 0], timestamp)

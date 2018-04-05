@@ -3,7 +3,12 @@ module Vissen
     module Message
       # Note
       #
+      # From the MIDI Association:
+      #   Note On event.
+      #   This message is sent when a note is depressed (start).
       #
+      #   Note Off event.
+      #   This message is sent when a note is released (ended).
       class Note < Base
         STATUS_MASK = 0xE0
         STATUS      = 0x80

@@ -3,7 +3,9 @@ module Vissen
     module Message
       # Aftertouch
       #
-      #
+      # From the MIDI Association:
+      #   Polyphonic Key Pressure (Aftertouch). This message is most often sent
+      #   by pressing down on the key after it "bottoms out".
       class Aftertouch < Base
         STATUS = 0xA0
       
