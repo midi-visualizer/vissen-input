@@ -12,25 +12,26 @@ describe Vissen::Input::Message::Note do
 
   let(:msg)       { subject.new data_on,  timestamp }
   let(:msg_off)   { subject.new data_off, timestamp }
-  
+
   describe '.matcher' do
     it 'returns a matcher that matches note data' do
       matcher = subject.matcher
-      
+
       assert matcher.match? data_on
       assert matcher.match? data_off
     end
-    
+
     it 'returns a matcher that does not match other data' do
       refute subject.matcher.match?([0xB0, 0, 0])
     end
   end
-  
+
   describe '.create' do
     it 'creates a valid note message' do
-      msg = subject.create(note, velocity, on: true, channel: channel,
-                           timestamp: timestamp)
-      
+      msg = subject.create note, velocity, on: true,
+                                           channel: channel,
+                                           timestamp: timestamp
+
       assert_equal channel,  msg.channel
       assert_equal note,     msg.note
       assert_equal velocity, msg.velocity

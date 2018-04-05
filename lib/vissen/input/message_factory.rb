@@ -13,11 +13,11 @@ module Vissen
       def initialize(matchers = nil)
         @lookup_table = Array.new(16)
         @matchers     = []
-        
-        if matchers
-          matchers.each { |m| add_matcher m }
-          freeze
-        end
+
+        return unless matchers
+
+        matchers.each { |m| add_matcher m }
+        freeze
       end
 
       def freeze
@@ -39,29 +39,30 @@ module Vissen
       # message klasses.
       def build(data, timestamp)
         matcher = lookup data
-              
+
         klass = matcher ? matcher.klass : Message::Unknown
         klass.new data, timestamp
       end
-      
+
       private
-      
+
       def lookup(data)
         status  = data[0] >> 4
-        matcher = @lookup_table[status]&.find { |m| m.match? data }
-        
+        entry   = @lookup_table[status]
+        matcher = entry && entry.find { |m| m.match? data }
+
         unless matcher
           matcher = @matchers.find { |m| m.match? data }
           add_to_lookup matcher, data if matcher
         end
-        
+
         matcher
       end
-      
+
       def add_to_lookup(matcher, data)
         status = data[0] >> 4
         entry  = @lookup_table[status]
-        
+
         if entry
           entry << matcher
         else

@@ -1,7 +1,7 @@
 require 'test_helper'
 
-class Vissen::InputTest < Minitest::Test
-  def test_that_it_has_a_version_number
+describe Vissen::Input do
+  it 'has a version number' do
     refute_nil ::Vissen::Input::VERSION
   end
 end

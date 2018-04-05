@@ -14,23 +14,23 @@ module Vissen
         STATUS      = 0x80
         NOTE_ON     = 0x10
         NOTE_OFF    = 0x00
-        
+
         def note
           data[1]
         end
-        
+
         def velocity
           data[2]
         end
-        
+
         def off?
-          (data[0] & NOTE_ON) == 0
+          (data[0] & NOTE_ON).zero?
         end
-        
+
         def on?
           !off?
         end
-        
+
         class << self
           # Create
           #

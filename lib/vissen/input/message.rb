@@ -15,27 +15,33 @@ module Vissen
     # The individual message implementations are based off the information given
     # on the [midi association website](https://www.midi.org/specifications/item/table-1-summary-of-midi-message).
     #
+    # Terminology
+    # -----------
+    # The first (and mandatory) byte of the data byte array is referred to as
+    # the message status. Since this byte also include channel information the
+    # term _status_ is, howerver, sometimes also used to name only the upper
+    # nibble of the status field.
     module Message
       STATUS_MASK  = 0xF0
       CHANNEL_MASK = 0x0F
       DATA_LENGTH  = 1
-      
+
       attr_reader :data, :timestamp
-      
+
       # Allow a message to pass for the raw byte array
       alias to_a data
-      
+
       def initialize(data, timestamp)
         raise TypeError unless data.length >= self.class::DATA_LENGTH
 
         @data      = data.freeze
         @timestamp = timestamp.freeze
       end
-      
+
       def status
         @data[0] & self.class::STATUS_MASK
       end
-      
+
       def channel
         @data[0] & self.class::CHANNEL_MASK
       end

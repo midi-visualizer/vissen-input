@@ -8,7 +8,7 @@ module Vissen
       class ProgramChange < Base
         DATA_LENGTH = 2
         STATUS      = 0xC0
-      
+
         def number
           data[1]
         end

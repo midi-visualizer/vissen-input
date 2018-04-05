@@ -8,18 +8,18 @@ describe Vissen::Input::Message::PitchBendChange do
   let(:data) do
     bend_low  = (bend + 0x2000) & 0x7F
     bend_high = (bend + 0x2000) >> 7
-    
+
     [0xE0 + channel, bend_low, bend_high]
   end
   let(:timestamp) { Time.now.to_f }
 
   let(:msg) { subject.new data, timestamp }
-  
+
   describe '.matcher' do
     it 'returns a matcher that matches note data' do
       assert subject.matcher.match? data
     end
-    
+
     it 'returns a matcher that does not match other data' do
       refute subject.matcher.match?([0xB0, 0, 0])
     end

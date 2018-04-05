@@ -28,7 +28,7 @@ module Vissen
         def number
           data[1]
         end
-        
+
         class << self
           # Matcher
           #
