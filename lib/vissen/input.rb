@@ -10,6 +10,7 @@ require 'vissen/input/message/control_change'
 require 'vissen/input/message/note'
 require 'vissen/input/message/pitch_bend_change'
 require 'vissen/input/message/program_change'
+require 'vissen/input/message/unknown'
 
 module Vissen
   module Input
