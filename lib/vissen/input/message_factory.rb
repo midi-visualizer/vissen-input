@@ -37,10 +37,17 @@ module Vissen
       #
       # Creates a new Message object by matching the data against the stored
       # message klasses.
-      def build(data, timestamp)
-        matcher = lookup data
+      def build(obj, timestamp)
+        data  = obj.to_a
+        klass =
+          if obj.is_a?(Message) && obj.valid?
+            return obj if obj.timestamp == timestamp
+            obj.class
+          else
+            matcher = lookup data
+            matcher ? matcher.klass : Message::Unknown
+          end
 
-        klass = matcher ? matcher.klass : Message::Unknown
         klass.new data, timestamp
       end
 

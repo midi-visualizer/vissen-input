@@ -15,6 +15,10 @@ module Vissen
         DATA_LENGTH = 3
         STATUS      = 0
 
+        def valid?
+          self.class.matcher.match? data
+        end
+
         class << self
           def inherited(subclass)
             (@subclasses ||= []) << subclass
@@ -29,13 +33,17 @@ module Vissen
           #
           # By supplying the optional named arguments channel and number
           def matcher(channel: nil, number: nil)
+            return @matcher if defined?(@matcher) && !channel && !number
             val, mask = status_value_and_mask channel
 
             if number
               raise RangeError unless (0...128).cover? number
               Matcher.new(self) { |d| (d[0] & mask) == val && d[1] == number }
             else
-              Matcher.new(self) { |d| (d[0] & mask) == val }
+              Matcher.new(self) { |d| (d[0] & mask) == val }.tap do |m|
+                # Cache the matcher if both channel and number are nil
+                @matcher = m unless channel || number
+              end
             end
           end
 

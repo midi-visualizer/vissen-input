@@ -38,6 +38,10 @@ module Vissen
         @timestamp = timestamp.freeze
       end
 
+      def valid?
+        true
+      end
+
       def status
         @data[0] & self.class::STATUS_MASK
       end

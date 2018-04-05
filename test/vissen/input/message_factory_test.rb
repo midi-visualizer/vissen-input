@@ -27,5 +27,26 @@ describe Vissen::Input::MessageFactory do
       assert_equal data,      msg.data
       assert_equal timestamp, msg.timestamp
     end
+
+    it 'reuses message objects if the timestamp matches' do
+      msg = Vissen::Input::Message::Note.create
+      built = factory.build msg, msg.timestamp
+
+      assert_equal msg, built
+    end
+
+    it 'does not reuse message objects when the timestamp has changed' do
+      msg = Vissen::Input::Message::Note.create
+      built = factory.build msg, msg.timestamp + 1
+
+      refute_equal msg, built
+    end
+
+    it 'does not reuse message objects when the underlying data is invalid' do
+      msg = Vissen::Input::Message::Note.new [0, 0, 0], timestamp
+      built = factory.build msg, msg.timestamp
+
+      refute_equal msg, built
+    end
   end
 end
