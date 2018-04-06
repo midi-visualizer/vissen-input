@@ -40,6 +40,23 @@ describe Vissen::Input::Message::Base do
     end
   end
 
+  describe '#[]' do
+    it 'returns a matcher that matches only the given channel' do
+      matcher = subject[channel_a]
+
+      assert matcher.match? data_a
+      refute matcher.match? data_b
+    end
+
+    it 'returns a matcher that matches only the given channel and number' do
+      matcher = subject[channel_a, byte_a]
+
+      assert matcher.match? [channel_a, byte_a, 0]
+      refute matcher.match? [channel_b, byte_a, 0]
+      refute matcher.match? [channel_a, byte_b, 0]
+    end
+  end
+
   describe '.create' do
     it 'creates a valid note message' do
       msg = subject.create(byte_a, 0, status: 0,
