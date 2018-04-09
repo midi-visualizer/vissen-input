@@ -34,18 +34,20 @@ module Vissen
           # STATUS_MASK.
           #
           # By supplying the optional named arguments channel and number
+          #
+          # Raises a RangeError if the channel is given and is outside its valid
+          # range of (0..15).
+          # Raises a RangeError if number is given and is outside its valid
+          # range of (0..127).
           def matcher(channel: nil, number: nil)
-            return @matcher if defined?(@matcher) && !channel && !number
+            return klass_matcher unless channel || number
             val, mask = status_value_and_mask channel
 
             if number
               raise RangeError unless (0...128).cover? number
               Matcher.new(self) { |d| (d[0] & mask) == val && d[1] == number }
             else
-              Matcher.new(self) { |d| (d[0] & mask) == val }.tap do |m|
-                # Cache the matcher if both channel and number are nil
-                @matcher = m unless channel || number
-              end
+              Matcher.new(self) { |d| (d[0] & mask) == val }
             end
           end
 
@@ -110,6 +112,12 @@ module Vissen
             else
               [self::STATUS, self::STATUS_MASK]
             end
+          end
+
+          def klass_matcher
+            return @klass_matcher if defined?(@klass_matcher)
+            val, mask = status_value_and_mask
+            @klass_matcher = Matcher.new(self) { |d| (d[0] & mask) == val }
           end
         end
       end
