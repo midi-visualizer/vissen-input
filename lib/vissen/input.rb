@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'vissen/input/version'
 
 require 'vissen/input/matcher'

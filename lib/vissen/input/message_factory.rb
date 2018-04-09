@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Vissen
   module Input
     # Message Factory
@@ -56,7 +58,7 @@ module Vissen
       def lookup(data)
         status  = data[0] >> 4
         entry   = @lookup_table[status]
-        matcher = entry && entry.find { |m| m.match? data }
+        matcher = entry&.find { |m| m.match? data }
 
         unless matcher
           matcher = @matchers.find { |m| m.match? data }
