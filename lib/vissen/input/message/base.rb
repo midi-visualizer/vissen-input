@@ -114,10 +114,15 @@ module Vissen
             end
           end
 
-          def klass_matcher
+          def klass_matcher(&block)
             return @klass_matcher if defined?(@klass_matcher)
-            val, mask = status_value_and_mask
-            @klass_matcher = Matcher.new(self) { |d| (d[0] & mask) == val }
+
+            unless block_given?
+              val, mask = status_value_and_mask
+              block = proc { |d| (d[0] & mask) == val }
+            end
+
+            @klass_matcher = Matcher.new(self, &block)
           end
         end
       end

@@ -27,7 +27,7 @@ module Vissen
           # the second byte takes values lower than 120. We therefore need to
           # override Base.matcher.
           def matcher
-            Matcher.new(self) do |d|
+            klass_matcher do |d|
               (d[0] & STATUS_MASK) == STATUS && d[1] < 120
             end
           end
