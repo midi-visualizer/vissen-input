@@ -32,7 +32,8 @@ describe Vissen::Input::Message::PitchBendChange do
       value = bend.to_f / 0x2000
       msg = subject.create value
 
-      assert_in_epsilon value, msg.value
+      assert msg.valid?
+      assert_in_delta value, msg.value, 0.02
     end
   end
 

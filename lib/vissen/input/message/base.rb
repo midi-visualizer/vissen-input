@@ -80,7 +80,9 @@ module Vissen
           #
           # Note that status and channel are masked using the default masks, and
           # not the constants that may have been defined by a subclass.
-          def create(*bytes, status: 0, channel: 0, timestamp: Time.now.to_f)
+          def create(*bytes, status: self::STATUS,
+                             channel: 0,
+                             timestamp: Time.now.to_f)
             raise ArgumentError if bytes.length >= self::DATA_LENGTH
 
             validate_status status
