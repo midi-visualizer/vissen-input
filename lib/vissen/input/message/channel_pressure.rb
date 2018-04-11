@@ -14,7 +14,7 @@ module Vissen
         STATUS      = 0xD0
         DATA_LENGTH = 2
 
-        def value
+        def pressure
           data[1]
         end
       end

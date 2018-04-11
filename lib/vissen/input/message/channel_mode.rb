@@ -25,7 +25,8 @@ module Vissen
       #       When an All Notes Off is received, all oscillators will turn off.
       #
       class ChannelMode < Base
-        STATUS = 0xB0
+        DATA_LENGTH = 2
+        STATUS      = 0xB0
 
         def number
           data[1]

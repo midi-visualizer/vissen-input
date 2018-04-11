@@ -41,6 +41,13 @@ describe Vissen::Input::Message::Note do
     end
   end
 
+  describe '#status' do
+    it 'does not include the note on bit in the status' do
+      assert_equal 0x80, msg.status
+      assert_equal 0x80, msg_off.status
+    end
+  end
+
   describe '#note' do
     it 'returns the note' do
       assert_equal note, msg.note
