@@ -21,6 +21,15 @@ module Vissen
         def value
           raw.to_f / CENTER_VALUE
         end
+
+        class << self
+          # TODO: Check the range on value.
+          def create(value = 0.0, **args)
+            bin_value = (value.to_f * CENTER_VALUE).to_i + CENTER_VALUE
+
+            super(bin_value & 0xFF, bin_value >> 7, **args)
+          end
+        end
       end
     end
   end

@@ -27,6 +27,15 @@ describe Vissen::Input::Message::PitchBendChange do
     end
   end
 
+  describe '.create' do
+    it 'accepts a float' do
+      value = bend.to_f / 0x2000
+      msg = subject.create value
+
+      assert_in_epsilon value, msg.value
+    end
+  end
+
   describe '#raw' do
     it 'returns the raw pitch bend value' do
       assert_equal bend, msg.raw
