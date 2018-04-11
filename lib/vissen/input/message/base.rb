@@ -51,6 +51,10 @@ module Vissen
             end
           end
 
+          def match?(message)
+            matcher.match? message
+          end
+
           # Factory
           #
           # Returns a new factory with all the subclasses of base added to it as

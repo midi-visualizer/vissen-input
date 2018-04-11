@@ -21,13 +21,15 @@ module Vissen
         end
 
         class << self
-          # Matcher
+          # Klass Matcher
           #
           # The control change message is special in that it is only valid when
           # the second byte takes values lower than 120. We therefore need to
-          # override Base.matcher.
-          def matcher
-            klass_matcher do |d|
+          # override Base.klass_matcher.
+          #
+          # FIXME: other matchers created may not be correct.
+          def klass_matcher
+            super do |d|
               (d[0] & STATUS_MASK) == STATUS && d[1] < 120
             end
           end

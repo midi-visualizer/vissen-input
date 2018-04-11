@@ -55,6 +55,7 @@ module Vissen
       # Process one message. By design, implementing this method allows for
       # multiple brokers being chained.
       def call(message)
+        # TODO: Remap the message if needed.
         @subscriptions.each do |subscription|
           next unless subscription.match? message
 
