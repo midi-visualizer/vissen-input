@@ -8,7 +8,7 @@ describe Vissen::Input::Subscription do
   let(:msg_klass)    { Vissen::Input::Message::Note }
   let(:msg)          { msg_klass.create }
   let(:matcher)      { msg_klass.matcher }
-  let(:handler)      { Minitest::Mock.new }
+  let(:handler)      { proc {} }
   let(:subscription) { subject.new matcher, handler, 0 }
 
   describe '.new' do
@@ -41,10 +41,11 @@ describe Vissen::Input::Subscription do
   end
 
   describe '#handle' do
-    it 'calls #call on the handler' do
-      handler.expect(:call, nil, [msg])
+    it 'calls the handler' do
+      called = false
+      subscription = subject.new matcher, proc { called = true }, 0
       subscription.handle msg
-      handler.verify
+      assert called
     end
   end
 end
