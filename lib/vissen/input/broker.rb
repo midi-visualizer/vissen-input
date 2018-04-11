@@ -46,8 +46,9 @@ module Vissen
       #
       # Takes one message from the message queue and handles it.
       def run_once
-        return if @message_queue.empty?
+        return false if @message_queue.empty?
         call @message_queue.shift
+        true
       end
 
       # Call
