@@ -22,7 +22,7 @@ describe Vissen::Input::Matcher do
       refute matcher.match?([0xE0, 0, 0])
     end
 
-    it 'returns true for a matching message instance' do
+    it 'returns false for a matching message instance' do
       msg = Vissen::Input::Message::ProgramChange.create
       refute matcher.match?(msg)
     end

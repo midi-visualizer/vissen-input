@@ -4,6 +4,7 @@ require 'vissen/input/version'
 
 require 'vissen/input/matcher'
 require 'vissen/input/message_factory'
+require 'vissen/input/subscription'
 
 require 'vissen/input/message'
 require 'vissen/input/message/base'
