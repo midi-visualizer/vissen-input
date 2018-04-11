@@ -3,8 +3,6 @@
 module Vissen
   module Input
     module Message
-      # Program Change
-      #
       # From the MIDI Association:
       #   This the same code as the Control Change (above), but implements Mode
       #   control and special message by using reserved controller numbers
@@ -28,16 +26,17 @@ module Vissen
         DATA_LENGTH = 2
         STATUS      = 0xB0
 
+        # @return [Integer] the control number.
         def number
           data[1]
         end
 
         class << self
-          # Klass Matcher
-          #
+          protected
+
           # The channel mode message is special in that it is only valid when
           # the second byte takes values equal to or greather than 120. We
-          # therefore need to override Base.klass_matcher.
+          # therefore need to override `Base.klass_matcher`.
           #
           # FIXME: other matchers created may not be correct.
           def klass_matcher

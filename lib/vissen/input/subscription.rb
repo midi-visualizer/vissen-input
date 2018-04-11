@@ -13,14 +13,25 @@ module Vissen
     class Subscription
       extend Forwardable
 
+      # @return [Integer] the subscription priority.
       attr_reader :priority
 
+      # @!method match?(message)
+      # This method is forwarded to `Message#match?`.
+      #
+      # @return [true, false] (see Matcher#match?).
       def_delegator :@matcher, :match?, :match?
+
+      # @!method handle(message)
+      # Calls the registered handler with the given message.
+      #
+      # @return (see Matcher#match?)
       def_delegator :@handler, :call, :handle
 
-      # Initialize
-      #
-      # The handler must respond to #call.
+      # @param  matcher [#match?] the matcher to use when filtering messages.
+      # @param  handler [#call] the target of the subscription.
+      # @param  priority [Integer] the priority of the subscription relative
+      #   other subscriptions.
       def initialize(matcher, handler, priority)
         @matcher  = matcher
         @handler  = handler

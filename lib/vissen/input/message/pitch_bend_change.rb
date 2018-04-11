@@ -3,8 +3,6 @@
 module Vissen
   module Input
     module Message
-      # Pitch Bend Change
-      #
       # From the MIDI Association:
       #   This message is sent to indicate a change in the pitch bender (wheel
       #   or lever, typically). The pitch bender is measured by a fourteen bit
@@ -14,16 +12,22 @@ module Vissen
         STATUS       = 0xE0
         CENTER_VALUE = 0x2000
 
+        # @return [Integer] the integer pitch bend value.
         def raw
           (data[2] << 7) + data[1] - CENTER_VALUE
         end
 
+        # @return [Float] the pitch bend value normalized to the range (-1..1).
         def value
           raw.to_f / CENTER_VALUE
         end
 
         class << self
           # TODO: Check the range on value.
+          #
+          # @param  value [Float] the pitch bend value in the range (-1..1).
+          # @param  args (see Base.create)
+          # @return [PitchBendChange]
           def create(value = 0.0, **args)
             bin_value = (value.to_f * CENTER_VALUE).round + CENTER_VALUE
 

@@ -3,8 +3,6 @@
 module Vissen
   module Input
     module Message
-      # Control Change
-      #
       # From the MIDI Association:
       #   This message is sent when a controller value changes. Controllers
       #   include devices such as pedals and levers. Controller numbers 120-127
@@ -12,20 +10,22 @@ module Vissen
       class ControlChange < Base
         STATUS = 0xB0
 
+        # @return [Integer] the control number.
         def number
           data[1]
         end
 
+        # @return [Integer] the control value.
         def value
           data[2]
         end
 
         class << self
-          # Klass Matcher
-          #
+          protected
+
           # The control change message is special in that it is only valid when
           # the second byte takes values lower than 120. We therefore need to
-          # override Base.klass_matcher.
+          # override `Base.klass_matcher`.
           #
           # FIXME: other matchers created may not be correct.
           def klass_matcher

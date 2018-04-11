@@ -3,8 +3,6 @@
 module Vissen
   module Input
     module Message
-      # Channel Pressure
-      #
       # From the MIDI Association:
       #   Channel Pressure (After-touch). This message is most often sent by
       #   pressing down on the key after it "bottoms out". This message is
@@ -14,6 +12,7 @@ module Vissen
         STATUS      = 0xD0
         DATA_LENGTH = 2
 
+        # @return [Integer] the pressure value.
         def pressure
           data[1]
         end

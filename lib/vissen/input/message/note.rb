@@ -3,8 +3,6 @@
 module Vissen
   module Input
     module Message
-      # Note
-      #
       # From the MIDI Association:
       #   Note On event.
       #   This message is sent when a note is depressed (start).
@@ -17,26 +15,32 @@ module Vissen
         NOTE_ON     = 0x10
         NOTE_OFF    = 0x00
 
+        # @return [Integer] the note value.
         def note
           data[1]
         end
 
+        # @return [Integer] the velocity value.
         def velocity
           data[2]
         end
 
+        # @return [true, false] true if the note was released.
         def off?
           (data[0] & NOTE_ON).zero?
         end
 
+        # @return [true, false] true if the note was depressed.
         def on?
           !off?
         end
 
         class << self
-          # Create
-          #
-          # Returns a new instance of a Note message.
+          # @param  bytes (see Base.create)
+          # @param  on [true, false] true if the note should be depressed,
+          #   otherwise false.
+          # @param  args (see Base.create)
+          # @return [Note]
           def create(*bytes, on: true, **args)
             super(*bytes, status: STATUS + (on ? NOTE_ON : NOTE_OFF), **args)
           end

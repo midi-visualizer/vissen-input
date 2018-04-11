@@ -3,20 +3,23 @@
 module Vissen
   module Input
     module Message
-      # Base
-      #
-      # Base message implementaion. This class should never be used directly,
-      # but rather be subclassed to create the various messages that the system
-      # understands.
+      # This is the base message implementaion. This class should never be used
+      # directly, but rather be subclassed to create the various messages that
+      # the system understands.
       #
       # The Base class keeps track of subclasses and can produce a message
-      # factory for all the implementations that it knows about.
+      # factory for all the implementations that it knows about (see
+      # `.factory`).
       class Base
         include Message
 
         DATA_LENGTH = 3
         STATUS      = 0
 
+        # Checks message data consistency with the class default matcher.
+        #
+        # @return [true, false] true if the message data matches the class
+        #   matcher.
         def valid?
           self.class.matcher.match? data
         end
@@ -26,8 +29,6 @@ module Vissen
             (@subclasses ||= []) << subclass
           end
 
-          # Matcher
-          #
           # Returns a new instance of a Matcher, configured to match this
           # particular Message class. Subclasses of Base can utilize the same
           # functionality by simply redefining STATUS and, if necessary,
@@ -39,6 +40,12 @@ module Vissen
           # range of (0..15).
           # Raises a RangeError if number is given and is outside its valid
           # range of (0..127).
+          #
+          # @param  channel [nil, Integer] the channel to match, or nil to match
+          #   all channels.
+          # @param  number [nil, Integer] the second byte value to match, or nil
+          #   to match all values.
+          # @return [Matcher] the matcher that fulfills the requirements.
           def matcher(channel: nil, number: nil)
             return klass_matcher unless channel || number
             val, mask = status_value_and_mask channel
@@ -51,38 +58,49 @@ module Vissen
             end
           end
 
+          # Accessor for the class default matcher.
+          #
+          # @param  message [#to_a] the message or data to match.
+          # @return [true, false] see `Matcher#match?`.
           def match?(message)
             matcher.match? message
           end
 
-          # Factory
-          #
-          # Returns a new factory with all the subclasses of base added to it as
+          # Creates a new factory with all the subclasses of base added to it as
           # matchers.
+          #
+          # @return [MessageFactory] a factory configured to build all
+          #   subclasses of Base.
           def factory
             raise RuntimeError unless defined? @subclasses
             MessageFactory.new @subclasses.map(&:matcher)
           end
 
-          # [] (Matcher)
+          # Alias to `#matcher` that swaps named arguments for positional ones.
           #
-          # Alias to #matcher that swaps positional arguments for named ones.
+          # @param  (see #matcher)
+          # @return (see #matcher)
           def [](channel, number = nil)
             matcher channel: channel, number: number
           end
 
-          # Create
-          #
-          # Build a new instance of the Message::Base, or subclass, using more
+          # Build a new instance of `Message::Base`, or a subclass, using more
           # intuitive arguments. Subclasses of Base can utilize the same
-          # functionality by simply redefining DATA_LENGTH to correspond to
+          # functionality by simply redefining `DATA_LENGTH` to correspond to
           # their message length.
           #
           # Note that status and channel are masked using the default masks, and
           # not the constants that may have been defined by a subclass.
+          #
+          # @param  bytes [Array<Integer>] the message data byte values.
+          #   Unspecified values default to 0.
+          # @param  status [Integer] the status to use for the new message.
+          # @param  channel [Integer] the channel to use for the new message.
+          # @param  timestamp [Float] the timestamp to use for the new message.
+          # @return [Base] a new instance of this class.
           def create(*bytes, status: self::STATUS,
-                             channel: 0,
-                             timestamp: Time.now.to_f)
+                     channel: 0,
+                     timestamp: Time.now.to_f)
             raise ArgumentError if bytes.length >= self::DATA_LENGTH
 
             validate_status status
