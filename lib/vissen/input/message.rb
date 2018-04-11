@@ -4,8 +4,6 @@ require 'forwardable'
 
 module Vissen
   module Input
-    # Message
-    #
     # This module implements the minimal interface for an input message. All
     # message classes must _include_ this module to be compatible with the input
     # matching engine.
@@ -28,11 +26,17 @@ module Vissen
       CHANNEL_MASK = 0x0F
       DATA_LENGTH  = 1
 
-      attr_reader :data, :timestamp
+      # @return [Array<Integer>]
+      attr_reader :data
+
+      # @return [Float]
+      attr_reader :timestamp
 
       # Allow a message to pass for the raw byte array
       alias to_a data
 
+      # @param  data [Array<Integer>] the raw message data.
+      # @param  timestamp [Float] the time that the message was received.
       def initialize(data, timestamp)
         raise TypeError unless data.length >= self.class::DATA_LENGTH
 
@@ -40,14 +44,20 @@ module Vissen
         @timestamp = timestamp.freeze
       end
 
+      # The default for messages is to always be valid. Message implementations
+      # can override this behaviour.
+      #
+      # @return [true]
       def valid?
         true
       end
 
+      # @return [Integer] the message status.
       def status
         @data[0] & self.class::STATUS_MASK
       end
 
+      # @return [Integer] the message channel.
       def channel
         @data[0] & self.class::CHANNEL_MASK
       end

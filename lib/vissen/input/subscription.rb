@@ -4,8 +4,6 @@ require 'forwardable'
 
 module Vissen
   module Input
-    # Subscription
-    #
     # Whenever a callable object wants to receive messages from a broker it is
     # wrapped inside of a subscription. A subscription is a basic immutable
     # value object with a minimal api that keeps track of three things: a

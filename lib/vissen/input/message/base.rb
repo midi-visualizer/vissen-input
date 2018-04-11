@@ -25,10 +25,6 @@ module Vissen
         end
 
         class << self
-          def inherited(subclass)
-            (@subclasses ||= []) << subclass
-          end
-
           # Returns a new instance of a Matcher, configured to match this
           # particular Message class. Subclasses of Base can utilize the same
           # functionality by simply redefining STATUS and, if necessary,
@@ -119,6 +115,10 @@ module Vissen
           end
 
           protected
+
+          def inherited(subclass)
+            (@subclasses ||= []) << subclass
+          end
 
           def validate_status(status)
             raise RangeError unless (status & ~STATUS_MASK).zero?
