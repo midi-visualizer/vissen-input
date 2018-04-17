@@ -19,6 +19,9 @@ module Vissen
     #   broker.run_once
     #
     class Broker
+      # Throw this constant inside of a subscription callback to prevent any of the lower priority listeners from receiving the message.
+      STOP_MESSAGE = 0
+      
       def initialize
         @subscriptions = []
         @message_queue = Queue.new
@@ -62,9 +65,9 @@ module Vissen
       # Insert a new message into the message queue. The message is handled at a
       # later time in `#run_once`.
       #
-      # @param  message [Message] the message to handle.
-      def publish(message)
-        @message_queue.push message
+      # @param  message [Message] the message(s) to handle.
+      def publish(*message)
+        message.each { |m| @message_queue.push m }
       end
 
       # Takes one message from the message queue and handles it.
@@ -73,7 +76,8 @@ module Vissen
       #   otherwise false.
       def run_once
         return false if @message_queue.empty?
-        call @message_queue.shift
+        ctrl = PropagationControl.new
+        call @message_queue.shift, ctrl
         true
       end
 
@@ -83,12 +87,13 @@ module Vissen
       # @param  message [Message] the message to match against the
       #   subscriptions.
       # @return [nil]
-      def call(message)
+      def call(message, ctrl)
         # TODO: Remap the message if needed.
         @subscriptions.each do |subscription|
+          break if ctrl.stop?(subscription.priority)
           next unless subscription.match? message
 
-          subscription.handle message
+          subscription.handle message, ctrl
         end
         nil
       end
@@ -111,6 +116,49 @@ module Vissen
 
         @subscriptions.push subscription
         subscription
+      end
+      
+      # Internal class used by the `Broker` to control the propagation of a
+      # message and provide a control surface for subscription handlers,
+      # allowing them to stop the propagation at priorites lower than (not equal
+      # to) their own.
+      #
+      # == Usage
+      # The following example uses a propagation control object to stop
+      # propagation at priority 1. Note that `#stop?` must be called for each
+      # message before `#stop!` to ensure that the correct priority is set.
+      #
+      #   ctrl = PropagationControl.new
+      #   ctrl.stop? 2 # => false
+      #   ctrl.stop? 1 # => false
+      #
+      #   ctrl.stop!
+      #
+      #   ctrl.stop? 1 # => false
+      #   ctrl.stop? 0 # => true
+      #
+      class PropagationControl
+        def initialize
+          @stop_at_priority = -1
+          @current_priority = 0
+        end
+        
+        # @param  [Integer] the priority to test if
+        # @return [true, false] whether to stop or not.
+        def stop?(priority)
+          return true if priority < @stop_at_priority
+          
+          @current_priority = priority
+          false
+        end
+        
+        # Sets the priority stopping threshold.
+        #
+        # @return [nil]
+        def stop!
+          @stop_at_priority = @current_priority
+          nil
+        end
       end
     end
   end

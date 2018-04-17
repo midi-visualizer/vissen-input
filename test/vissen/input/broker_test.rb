@@ -73,6 +73,17 @@ describe Vissen::Input::Broker do
 
       refute @called
     end
+    
+    it 'publishes multiple messages' do
+      broker.publish(msg, msg)
+      broker.run_once
+      
+      assert @called
+      @called = false
+      
+      broker.run_once
+      assert @called
+    end
   end
 
   describe '#run_once' do
@@ -108,6 +119,27 @@ describe Vissen::Input::Broker do
 
       broker.run_once
       assert @called
+    end
+    
+    it 'stops propagation at lower priorities' do
+      counter = 0
+      
+      broker.subscribe(matcher, priority: 1) do |_, ctrl|
+        counter += 1
+        ctrl.stop!
+      end
+      
+      broker.subscribe(matcher, priority: 1) do
+        counter += 1
+      end
+      
+      broker.subscribe(matcher) do
+        assert false
+      end
+      
+      broker.publish msg
+      broker.run_once
+      assert_equal 2, counter
     end
   end
 end
