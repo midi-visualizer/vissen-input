@@ -1,5 +1,6 @@
 # Vissen::Input
 
+[![Build Status](https://travis-ci.org/midi-visualizer/vissen-input.svg?branch=master)](https://travis-ci.org/midi-visualizer/vissen-input)
 [![Inline docs](http://inch-ci.org/github/midi-visualizer/vissen-input.svg?branch=master)](http://inch-ci.org/github/midi-visualizer/vissen-input)
 
 ## Installation
