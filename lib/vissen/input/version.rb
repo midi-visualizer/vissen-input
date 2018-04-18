@@ -2,6 +2,7 @@
 
 module Vissen
   module Input
-    VERSION = '0.2.1'
+    # The Vissen Input library version number.
+    VERSION = '0.2.2'
   end
 end
