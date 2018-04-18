@@ -18,10 +18,19 @@ module Vissen
     #   broker.publish message
     #   broker.run_once
     #
+    # The next example sets up two different priority listeners, one of which
+    # blocks the other for some messages.
+    #
+    #   broker = Broker.new
+    #   broker.subscribe Message::Note[1], priority: 1 do |message|
+    #     play message.note
+    #   end
+    #
+    #   broker.subscribe Message::Note[1], priority: 2 do |message, ctrl|
+    #     ctrl.stop! if message.note % 2 == 0
+    #   end
+    #
     class Broker
-      # Throw this constant inside of a subscription callback to prevent any of the lower priority listeners from receiving the message.
-      STOP_MESSAGE = 0
-      
       def initialize
         @subscriptions = []
         @message_queue = Queue.new
@@ -117,7 +126,7 @@ module Vissen
         @subscriptions.push subscription
         subscription
       end
-      
+
       # Internal class used by the `Broker` to control the propagation of a
       # message and provide a control surface for subscription handlers,
       # allowing them to stop the propagation at priorites lower than (not equal
@@ -142,16 +151,16 @@ module Vissen
           @stop_at_priority = -1
           @current_priority = 0
         end
-        
+
         # @param  [Integer] the priority to test if
         # @return [true, false] whether to stop or not.
         def stop?(priority)
           return true if priority < @stop_at_priority
-          
+
           @current_priority = priority
           false
         end
-        
+
         # Sets the priority stopping threshold.
         #
         # @return [nil]
