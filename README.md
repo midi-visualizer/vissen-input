@@ -1,5 +1,6 @@
-# Vissen::Input
+# 🥀 Vissen Input
 
+[![Gem Version](https://badge.fury.io/rb/vissen-input.svg)](https://badge.fury.io/rb/vissen-input)
 [![Build Status](https://travis-ci.org/midi-visualizer/vissen-input.svg?branch=master)](https://travis-ci.org/midi-visualizer/vissen-input)
 [![Inline docs](http://inch-ci.org/github/midi-visualizer/vissen-input.svg?branch=master)](http://inch-ci.org/github/midi-visualizer/vissen-input)
 
@@ -21,7 +22,29 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+include Vissen::Input
+
+# First we setup a message factory and a broker.
+factory = Message::Base.factory
+broker  = Broker.new
+
+# We then subscribe to a message type and provide a callback.
+broker.subscribe Message::Note[0] do |msg|
+    play msg.note if msg.on?
+end
+
+# We simulate a raw note on message arriving to the broker
+# at time 4.2.
+message = factory.build([0x90, 42, 0], 4.2)
+broker.publish message
+
+# Finally we let the broker process the next message in its
+# queue. The callback should now have been called.
+broker.run_once
+```
+
+Please see the [documentation](http://www.rubydoc.info/gems/vissen-input/) for more details.
 
 ## Development
 
