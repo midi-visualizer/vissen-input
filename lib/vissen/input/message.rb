@@ -26,10 +26,10 @@ module Vissen
       CHANNEL_MASK = 0x0F
       DATA_LENGTH  = 1
 
-      # @return [Array<Integer>]
+      # @return [Array<Integer>] the raw message data.
       attr_reader :data
 
-      # @return [Float]
+      # @return [Float] the time of arrival for the message.
       attr_reader :timestamp
 
       # Allow a message to pass for the raw byte array

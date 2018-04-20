@@ -17,13 +17,14 @@ module Vissen
       # @!method match?(message)
       # This method is forwarded to `Message#match?`.
       #
+      # @param  message (see Matcher#match?)
       # @return [true, false] (see Matcher#match?).
       def_delegator :@matcher, :match?, :match?
 
       # @!method handle(message)
       # Calls the registered handler with the given message.
       #
-      # @return (see Matcher#match?)
+      # @param  message [Message] the message that the subscriber should handle.
       def_delegator :@handler, :call, :handle
 
       # @param  matcher [#match?] the matcher to use when filtering messages.
