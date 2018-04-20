@@ -17,6 +17,8 @@ module Vissen
     #   matcher.match? [0xA0, 0, 0] # => true
     #
     class Matcher
+      # @return [Message] the message class responsible for the messages that
+      #   this matcher matches.
       attr_reader :klass
 
       # @param message_klass [Message] the message class that should be used to
