@@ -3,6 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/vissen-input.svg)](https://badge.fury.io/rb/vissen-input)
 [![Build Status](https://travis-ci.org/midi-visualizer/vissen-input.svg?branch=master)](https://travis-ci.org/midi-visualizer/vissen-input)
 [![Inline docs](http://inch-ci.org/github/midi-visualizer/vissen-input.svg?branch=master)](http://inch-ci.org/github/midi-visualizer/vissen-input)
+[![Documentation](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://www.rubydoc.info/gems/vissen-input/)
 
 ## Installation
 
