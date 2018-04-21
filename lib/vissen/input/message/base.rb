@@ -12,7 +12,7 @@ module Vissen
       # `.factory`).
       class Base
         include Message
-        
+
         # @see Message
         DATA_LENGTH = 3
         # @see Message

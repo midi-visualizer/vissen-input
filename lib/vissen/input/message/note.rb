@@ -15,11 +15,11 @@ module Vissen
         STATUS_MASK = 0xE0
         # @see Message
         STATUS      = 0x80
-        
+
         # Note On specifies the value of the lowest status bit for note on
         # messages.
         NOTE_ON     = 0x10
-        
+
         # Note On specifies the value of the lowest status bit for note off
         # messages.
         NOTE_OFF    = 0x00

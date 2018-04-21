@@ -12,7 +12,7 @@ module Vissen
       class PitchBendChange < Base
         # @see Message
         STATUS       = 0xE0
-        
+
         # Center value is defined as the the offset that should be removed from
         # the 14 bit pitch bend value to center it around zero.
         CENTER_VALUE = 0x2000

@@ -25,11 +25,11 @@ module Vissen
       # The status mask determines which bits of the first byte belong to the
       # status code.
       STATUS_MASK  = 0xF0
-      
+
       # The channel mask determines which bits of the first byte belong to the
       # channel value.
       CHANNEL_MASK = 0x0F
-      
+
       # Data length specifies what number of bytes must be present in the raw
       # message for it to be valid.
       DATA_LENGTH  = 1
