@@ -12,8 +12,10 @@ module Vissen
       # `.factory`).
       class Base
         include Message
-
+        
+        # @see Message
         DATA_LENGTH = 3
+        # @see Message
         STATUS      = 0
 
         # Checks message data consistency with the class default matcher.
@@ -142,7 +144,7 @@ module Vissen
           #
           # @raise  [RangeError] if the channel is outside its allowable range.
           #
-          # @param  status [Integer] the channel to validate.
+          # @param  channel [Integer] the channel to validate.
           # @return [true] when the channel is valid.
           def validate_channel(channel)
             raise RangeError unless (channel & ~CHANNEL_MASK).zero?

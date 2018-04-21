@@ -4,15 +4,24 @@ module Vissen
   module Input
     module Message
       # From the MIDI Association:
-      #   Note On event.
-      #   This message is sent when a note is depressed (start).
       #
-      #   Note Off event.
-      #   This message is sent when a note is released (ended).
+      # > Note On event.
+      # > This message is sent when a note is depressed (start).
+      #
+      # > Note Off event.
+      # > This message is sent when a note is released (ended).
       class Note < Base
+        # @see Message
         STATUS_MASK = 0xE0
+        # @see Message
         STATUS      = 0x80
+        
+        # Note On specifies the value of the lowest status bit for note on
+        # messages.
         NOTE_ON     = 0x10
+        
+        # Note On specifies the value of the lowest status bit for note off
+        # messages.
         NOTE_OFF    = 0x00
 
         # @return [Integer] the note value.

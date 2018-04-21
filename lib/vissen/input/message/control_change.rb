@@ -4,10 +4,12 @@ module Vissen
   module Input
     module Message
       # From the MIDI Association:
-      #   This message is sent when a controller value changes. Controllers
-      #   include devices such as pedals and levers. Controller numbers 120-127
-      #   are reserved as "Channel Mode Messages".
+      #
+      # > This message is sent when a controller value changes. Controllers
+      # > include devices such as pedals and levers. Controller numbers 120-127
+      # > are reserved as "Channel Mode Messages".
       class ControlChange < Base
+        # @see Message
         STATUS = 0xB0
 
         # @return [Integer] the control number.

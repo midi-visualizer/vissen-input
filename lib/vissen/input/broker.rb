@@ -152,7 +152,8 @@ module Vissen
           @current_priority = 0
         end
 
-        # @param  [Integer] the priority to test if
+        # @param  priority [Integer] the priority to check out stopping
+        #   condition against.
         # @return [true, false] whether to stop or not.
         def stop?(priority)
           return true if priority < @stop_at_priority

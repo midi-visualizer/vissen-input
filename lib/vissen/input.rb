@@ -19,8 +19,6 @@ require 'vissen/input/message/program_change'
 require 'vissen/input/message/unknown'
 
 module Vissen
-  # Input
-  #
   # This module includes all the input messages that can be sent to the vissen
   # engine, as well as some facilities for converting them to and from their
   # binary form.

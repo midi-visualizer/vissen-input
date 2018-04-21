@@ -4,12 +4,17 @@ module Vissen
   module Input
     module Message
       # From the MIDI Association:
-      #   This message is sent to indicate a change in the pitch bender (wheel
-      #   or lever, typically). The pitch bender is measured by a fourteen bit
-      #   value. Center (no pitch change) is 2000H. Sensitivity is a function of
-      #   the receiver, but may be set using RPN 0.
+      #
+      # > This message is sent to indicate a change in the pitch bender (wheel
+      # > or lever, typically). The pitch bender is measured by a fourteen bit
+      # > value. Center (no pitch change) is 2000H. Sensitivity is a function of
+      # > the receiver, but may be set using RPN 0.
       class PitchBendChange < Base
+        # @see Message
         STATUS       = 0xE0
+        
+        # Center value is defined as the the offset that should be removed from
+        # the 14 bit pitch bend value to center it around zero.
         CENTER_VALUE = 0x2000
 
         # @return [Integer] the integer pitch bend value.
