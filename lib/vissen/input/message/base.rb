@@ -27,6 +27,8 @@ module Vissen
         end
 
         class << self
+          # rubocop:disable Metrics/AbcSize
+
           # Returns a new instance of a Matcher, configured to match this
           # particular Message class. Subclasses of Base can utilize the same
           # functionality by simply redefining STATUS and, if necessary,
@@ -55,6 +57,8 @@ module Vissen
               Matcher.new(self) { |d| (d[0] & mask) == val }
             end
           end
+
+          # rubocop:enable Metrics/AbcSize
 
           # Accessor for the class default matcher.
           #
