@@ -47,6 +47,17 @@ Metrics/ModuleLength:
   Exclude:
     - 'test/**/*.rb'
 
+Naming/UncommunicativeMethodParamName:
+  AllowedNames:
+    - 'io'
+    - 'id'
+    - 'to'
+    - 'by'
+    - 'on'
+    - 'in'
+    - 'at'
+    - '_'
+
 Style/MixinUsage:
   Exclude:
     - 'examples/*.rb'
