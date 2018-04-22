@@ -23,7 +23,7 @@ module Vissen
       # @param  matchers [nil, Array<Matcher>] the matchers to use when building
       #   messages. If provided the factory will be frozen after creation.
       def initialize(matchers = nil)
-        @lookup_table = Array.new(16)
+        @lookup_table = Array.new(16) { [] }
         @matchers     = []
 
         return unless matchers
@@ -87,13 +87,7 @@ module Vissen
 
       def add_to_lookup(matcher, data)
         status = data[0] >> 4
-        entry  = @lookup_table[status]
-
-        if entry
-          entry << matcher
-        else
-          @lookup_table[status] = [matcher]
-        end
+        @lookup_table[status] << matcher
       end
     end
   end
