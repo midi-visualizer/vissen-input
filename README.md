@@ -26,9 +26,8 @@ Or install it yourself as:
 ```ruby
 include Vissen::Input
 
-# First we setup a message factory and a broker.
-factory = Message::Base.factory
-broker  = Broker.new
+# First we setup a broker.
+broker = Broker.new
 
 # We then subscribe to a message type and provide a callback.
 broker.subscribe Message::Note[0] do |msg|
@@ -37,8 +36,7 @@ end
 
 # We simulate a raw note on message arriving to the broker
 # at time 4.2.
-message = factory.build([0x90, 42, 0], 4.2)
-broker.publish message
+broker.publish data: [0x90, 42, 0], timestamp: 4.2
 
 # Finally we let the broker process the next message in its
 # queue. The callback should now have been called.
