@@ -50,3 +50,6 @@ Metrics/ModuleLength:
 Style/MixinUsage:
   Exclude:
     - 'examples/*.rb'
+    
+Style/FormatStringToken:
+  Enabled: false
