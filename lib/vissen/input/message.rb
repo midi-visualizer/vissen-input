@@ -60,6 +60,15 @@ module Vissen
         true
       end
 
+      # Converts the message back into a raw hash representation. The format is
+      # intentionally similar to the output of the `Unimidi` gem.
+      #
+      # @return [Hash] a hash containing both the message data and the timestamp
+      #   marking when it arrived.
+      def to_h
+        { data: @data, timestamp: @timestamp }.freeze
+      end
+
       # @return [Integer] the message status.
       def status
         @data[0] & self.class::STATUS_MASK

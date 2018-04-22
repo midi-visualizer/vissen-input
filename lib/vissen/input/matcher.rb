@@ -38,10 +38,10 @@ module Vissen
       # Match either a byte array or a `Message` against the rule stored in the
       # matcher.
       #
-      # @param  obj [#to_a] the message data to match.
+      # @param  obj [Hash, #to_a] the message data to match.
       # @return [true, false] true if the data matches.
       def match?(obj)
-        data = obj.to_a
+        data = obj.is_a?(Hash) ? obj.fetch(:data) : obj.to_a
 
         return false unless data.length >= @klass::DATA_LENGTH
         @rule.call data

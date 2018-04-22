@@ -15,7 +15,7 @@ module Vissen
       attr_reader :priority
 
       # @!method match?(message)
-      # This method is forwarded to `Message#match?`.
+      # This method is forwarded to `Matcher#match?`.
       #
       # @param  message (see Matcher#match?)
       # @return [true, false] (see Matcher#match?).

@@ -9,6 +9,7 @@ describe Vissen::Input::Broker do
   let(:msg)       { msg_klass.create }
   let(:matcher)   { msg_klass.matcher }
   let(:handler)   { proc { @called = true } }
+  let(:factory)   { Vissen::Input::Message::Base.factory }
   let(:broker)    { subject.new }
 
   before { @called = false }
