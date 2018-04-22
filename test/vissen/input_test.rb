@@ -8,8 +8,7 @@ describe Vissen::Input do
   end
 
   it 'can distribute messages' do
-    factory = Vissen::Input::Message::Base.factory
-    broker  = Vissen::Input::Broker.new
+    broker = Vissen::Input::Broker.new
     control_change_received = false
     note_received = false
     pitch_bend_change_received = false
@@ -41,16 +40,16 @@ describe Vissen::Input do
     end
 
     # Step 1
-    # Build messages from a raw data stream
+    # Simulate messages arriving from a raw data stream
     messages = [
       # Note on
-      factory.build([0x90 + 14, 0, 0], 4.2), # This should not match
-      factory.build([0x90 + 15, 1, 0], 4.3), # This should
+      { data: [0x90 + 14, 0, 0], timestamp: 4.2 }, # This should not match
+      { data: [0x90 + 15, 1, 0], timestamp: 4.3 }, # This should
       # Control Change
-      factory.build([0xB0 + 3, 5, 1], 4.4),  # This too
-      factory.build([0xB0 + 3, 4, 0], 4.4),  # But not this
+      { data: [0xB0 + 3, 5, 1], timestamp: 4.4 },  # This too
+      { data: [0xB0 + 3, 4, 0], timestamp: 4.5 },  # But not this
       # Pitch Bend Change
-      factory.build([0xE0, 42, 42], 4.5)
+      { data: [0xE0, 42, 42], timestamp: 4.6 }
     ]
 
     # Step 2

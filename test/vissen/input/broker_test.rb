@@ -182,5 +182,17 @@ describe Vissen::Input::Broker do
       count_after = ObjectSpace.each_object(Vissen::Input::Message).count
       assert_equal count_before, count_after
     end
+
+    it 'only allocates on new instance' do
+      broker.subscribe matcher, handler
+      broker.subscribe matcher, handler
+      broker.publish data: [0x90, 0, 0], timestamp: 0.0
+
+      count_before = ObjectSpace.each_object(Vissen::Input::Message).count
+      broker.run_once
+      count_after = ObjectSpace.each_object(Vissen::Input::Message).count
+
+      assert_equal count_before + 1, count_after
+    end
   end
 end
