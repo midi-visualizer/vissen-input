@@ -74,10 +74,9 @@ module Vissen
       # Insert a new message into the message queue. The message is handled at a
       # later time in `#run_once`.
       #
-      # @param  message [Message, Hash, Array] the message(s) to handle.
+      # @param  message [Message, Hash] the message(s) to handle.
       def publish(*message)
         message.each do |m|
-          m = { data: m, timestamp: 0.0 } if m.is_a? Array
           @message_queue.push m
         end
       end

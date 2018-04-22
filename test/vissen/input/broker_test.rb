@@ -74,7 +74,7 @@ describe Vissen::Input::Broker do
     end
 
     it 'does not send other messages to the handler' do
-      broker.publish [0xE0, 0, 0]
+      broker.publish data: [0xE0, 0, 0], timestamp: 0.0
       broker.run_once
 
       refute @called
@@ -164,7 +164,7 @@ describe Vissen::Input::Broker do
 
         count_before = ObjectSpace.each_object(Vissen::Input::Message).count
 
-        100.times { broker.publish data: [0x90, 0, 0], timestamp: 0.0 }
+        100.times { broker.publish(data: [0x90, 0, 0], timestamp: 0.0) }
 
         count_mid = ObjectSpace.each_object(Vissen::Input::Message).count
         assert_equal count_before, count_mid
@@ -180,7 +180,7 @@ describe Vissen::Input::Broker do
 
         count_before = ObjectSpace.each_object(Vissen::Input::Message).count
 
-        100.times { broker.publish data: [0xE0, 0, 0], timestamp: 0.0 }
+        100.times { broker.publish(data: [0xE0, 0, 0], timestamp: 0.0) }
         100.times { broker.run_once }
 
         count_after = ObjectSpace.each_object(Vissen::Input::Message).count
@@ -190,7 +190,7 @@ describe Vissen::Input::Broker do
       it 'only allocates on new instance' do
         broker.subscribe matcher, handler
         broker.subscribe matcher, handler
-        broker.publish data: [0x90, 0, 0], timestamp: 0.0
+        broker.publish(data: [0x90, 0, 0], timestamp: 0.0)
 
         count_before = ObjectSpace.each_object(Vissen::Input::Message).count
         broker.run_once
