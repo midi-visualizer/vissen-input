@@ -21,6 +21,8 @@ module Vissen
       # @return [true, false] (see Matcher#match?).
       def_delegator :@matcher, :match?, :match?
 
+      def_delegator :@matcher, :match, :match
+
       # @!method handle(message)
       # Calls the registered handler with the given message.
       #

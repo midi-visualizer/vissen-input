@@ -69,6 +69,23 @@ module Vissen
         { data: @data, timestamp: @timestamp }.freeze
       end
 
+      # Allows every message instance to pass for a `Hash` object on the same
+      # form returned by #to_h.
+      #
+      # @raise  [KeyError] unless the given key is `:data` or `:timestamp`.
+      #
+      # @param  key [Symbol] the field to fetch (either `:data` or
+      #   `:timestamp`).
+      # @return [Array<Integer>] when key is `:data`.
+      # @return [Float] when key is `:timestamp`.
+      def fetch(key)
+        case key
+        when :data then @data
+        when :timestamp then @timestamp
+        else raise KeyError
+        end
+      end
+
       # @return [Integer] the message status.
       def status
         @data[0] & self.class::STATUS_MASK

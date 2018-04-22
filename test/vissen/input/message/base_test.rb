@@ -42,6 +42,29 @@ describe Vissen::Input::Message::Base do
     end
   end
 
+  describe '#to_h' do
+    it 'returns a hash' do
+      hash = msg.to_h
+
+      assert_equal data_a, hash[:data]
+      assert_equal timestamp, hash[:timestamp]
+    end
+  end
+
+  describe '#fetch' do
+    it 'returns data' do
+      assert_equal data_a, msg.fetch(:data)
+    end
+
+    it 'returns timestamp' do
+      assert_equal timestamp, msg.fetch(:timestamp)
+    end
+
+    it 'raises a keyerror for other keys' do
+      assert_raises(KeyError) { msg.fetch :dat }
+    end
+  end
+
   describe '#[]' do
     it 'returns a matcher that matches only the given channel' do
       matcher = subject[channel_a]

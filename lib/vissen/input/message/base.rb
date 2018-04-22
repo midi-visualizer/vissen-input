@@ -27,6 +27,7 @@ module Vissen
         end
 
         class << self
+          extend Forwardable
           # rubocop:disable Metrics/AbcSize
 
           # Returns a new instance of a Matcher, configured to match this
@@ -60,13 +61,23 @@ module Vissen
 
           # rubocop:enable Metrics/AbcSize
 
-          # Accessor for the class default matcher.
+          # @!method match?(obj)
+          # Accessor to `Matcher#match?` on the default class matcher.
           #
-          # @param  message [#to_a] the message or data to match.
-          # @return [true, false] see `Matcher#match?`.
-          def match?(message)
-            matcher.match? message
-          end
+          # @see Matcher#match?
+          #
+          # @param  obj [#to_a] the message or data to match.
+          # @return [true, false] (see Matcher#match?)
+          def_delegator :klass_matcher, :match?, :match?
+
+          # @!method match(obj)
+          # Accessor to `Matcher#match` on the default class matcher.
+          #
+          # @see Matcher#match
+          #
+          # @param  obj [Hash, Message] the message to match.
+          # @return [false, Object, Message] (see Matcher#match)
+          def_delegator :klass_matcher, :match, :match
 
           # Creates a new factory with all the subclasses of base added to it as
           # matchers.

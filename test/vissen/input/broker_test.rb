@@ -8,7 +8,12 @@ describe Vissen::Input::Broker do
   let(:msg_klass) { Vissen::Input::Message::Note }
   let(:msg)       { msg_klass.create }
   let(:matcher)   { msg_klass.matcher }
-  let(:handler)   { proc { @called = true } }
+  let(:handler) do
+    proc do |msg|
+      assert_kind_of Vissen::Input::Message, msg
+      @called = true
+    end
+  end
   let(:factory)   { Vissen::Input::Message::Base.factory }
   let(:broker)    { subject.new }
 
@@ -73,6 +78,13 @@ describe Vissen::Input::Broker do
       broker.run_once
 
       refute @called
+    end
+
+    it 'accpets a hash' do
+      broker.publish msg.to_h
+      broker.run_once
+
+      assert @called
     end
 
     it 'publishes multiple messages' do
@@ -141,6 +153,34 @@ describe Vissen::Input::Broker do
       broker.publish msg
       broker.run_once
       assert_equal 2, counter
+    end
+
+    it 'allocates a new message when a subscription match' do
+      broker.subscribe matcher, handler
+
+      count_before = ObjectSpace.each_object(Vissen::Input::Message).count
+
+      100.times { broker.publish data: [0x90, 0, 0], timestamp: 0.0 }
+
+      count_mid = ObjectSpace.each_object(Vissen::Input::Message).count
+      assert_equal count_before, count_mid
+
+      100.times { broker.run_once }
+
+      count_after = ObjectSpace.each_object(Vissen::Input::Message).count
+      assert_equal count_before + 100, count_after
+    end
+
+    it 'does not allocate message objects when no subscriptions match' do
+      broker.subscribe(matcher) { assert false }
+
+      count_before = ObjectSpace.each_object(Vissen::Input::Message).count
+
+      100.times { broker.publish data: [0xE0, 0, 0], timestamp: 0.0 }
+      100.times { broker.run_once }
+
+      count_after = ObjectSpace.each_object(Vissen::Input::Message).count
+      assert_equal count_before, count_after
     end
   end
 end

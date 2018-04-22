@@ -46,8 +46,34 @@ module Vissen
       def match?(obj)
         data = obj.is_a?(Hash) ? obj.fetch(:data) : obj.to_a
 
-        return false unless data.length >= @klass::DATA_LENGTH
+        return false if data.length < @klass::DATA_LENGTH
         @rule.call data
+      end
+
+      # Matches either a hash or a `Message` against the internal matching rule.
+      # If the object matches and is not a `Message` object a new instance will
+      # be created.
+      #
+      # If a block is given the message will be yielded to it.
+      #
+      # @param  obj [Message, Hash] the message to be matched.
+      # @return [false] if the object does not match.
+      # @return [Object] the return value of the given block, if a block was
+      #   given.
+      # @return [Message] the given message if it is a `Message` or a new
+      #   instance.
+      def match(obj)
+        data = obj.fetch :data
+        return false if data.length < @klass::DATA_LENGTH || !@rule.call(data)
+
+        message =
+          case obj
+          when Message then obj
+          when Hash then @klass.new data, obj.fetch(:timestamp)
+          end
+
+        return message unless block_given?
+        yield message
       end
     end
   end

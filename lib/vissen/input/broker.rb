@@ -74,9 +74,12 @@ module Vissen
       # Insert a new message into the message queue. The message is handled at a
       # later time in `#run_once`.
       #
-      # @param  message [Message] the message(s) to handle.
+      # @param  message [Message, Hash, Array] the message(s) to handle.
       def publish(*message)
-        message.each { |m| @message_queue.push m }
+        message.each do |m|
+          m = { data: m, timestamp: 0.0 } if m.is_a? Array
+          @message_queue.push m
+        end
       end
 
       # Takes one message from the message queue and handles it.
@@ -100,16 +103,18 @@ module Vissen
         # TODO: Remap the message if needed.
         @subscriptions.each do |subscription|
           break if ctrl.stop?(subscription.priority)
-          next unless subscription.match? message
 
-          subscription.handle message, ctrl
+          subscription.match message do |msg|
+            subscription.handle msg, ctrl
+            message = msg
+          end
         end
         nil
       end
 
       private
 
-      # Insert of append a new subscription to the list. The subscription will
+      # Insert or append a new subscription to the list. The subscription will
       # be placed before the first subscription that is found to have a lower
       # priority, or last.
       #
