@@ -79,15 +79,10 @@ module Vissen
 
         unless matcher
           matcher = @matchers.find { |m| m.match? data }
-          add_to_lookup matcher, data if matcher
+          @lookup_table[status] << matcher if matcher
         end
 
         matcher
-      end
-
-      def add_to_lookup(matcher, data)
-        status = data[0] >> 4
-        @lookup_table[status] << matcher
       end
     end
   end
