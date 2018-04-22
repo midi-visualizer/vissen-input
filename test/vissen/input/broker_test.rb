@@ -155,44 +155,49 @@ describe Vissen::Input::Broker do
       assert_equal 2, counter
     end
 
-    it 'allocates a new message when a subscription match' do
-      broker.subscribe matcher, handler
+    describe 'allocation' do
+      before { GC.disable }
+      after  { GC.enable }
 
-      count_before = ObjectSpace.each_object(Vissen::Input::Message).count
+      it 'allocates a new message when a subscription match' do
+        broker.subscribe matcher, handler
 
-      100.times { broker.publish data: [0x90, 0, 0], timestamp: 0.0 }
+        count_before = ObjectSpace.each_object(Vissen::Input::Message).count
 
-      count_mid = ObjectSpace.each_object(Vissen::Input::Message).count
-      assert_equal count_before, count_mid
+        100.times { broker.publish data: [0x90, 0, 0], timestamp: 0.0 }
 
-      100.times { broker.run_once }
+        count_mid = ObjectSpace.each_object(Vissen::Input::Message).count
+        assert_equal count_before, count_mid
 
-      count_after = ObjectSpace.each_object(Vissen::Input::Message).count
-      assert_equal count_before + 100, count_after
-    end
+        100.times { broker.run_once }
 
-    it 'does not allocate message objects when no subscriptions match' do
-      broker.subscribe(matcher) { assert false }
+        count_after = ObjectSpace.each_object(Vissen::Input::Message).count
+        assert_equal count_before + 100, count_after
+      end
 
-      count_before = ObjectSpace.each_object(Vissen::Input::Message).count
+      it 'does not allocate message objects when no subscriptions match' do
+        broker.subscribe(matcher) { assert false }
 
-      100.times { broker.publish data: [0xE0, 0, 0], timestamp: 0.0 }
-      100.times { broker.run_once }
+        count_before = ObjectSpace.each_object(Vissen::Input::Message).count
 
-      count_after = ObjectSpace.each_object(Vissen::Input::Message).count
-      assert_equal count_before, count_after
-    end
+        100.times { broker.publish data: [0xE0, 0, 0], timestamp: 0.0 }
+        100.times { broker.run_once }
 
-    it 'only allocates on new instance' do
-      broker.subscribe matcher, handler
-      broker.subscribe matcher, handler
-      broker.publish data: [0x90, 0, 0], timestamp: 0.0
+        count_after = ObjectSpace.each_object(Vissen::Input::Message).count
+        assert_equal count_before, count_after
+      end
 
-      count_before = ObjectSpace.each_object(Vissen::Input::Message).count
-      broker.run_once
-      count_after = ObjectSpace.each_object(Vissen::Input::Message).count
+      it 'only allocates on new instance' do
+        broker.subscribe matcher, handler
+        broker.subscribe matcher, handler
+        broker.publish data: [0x90, 0, 0], timestamp: 0.0
 
-      assert_equal count_before + 1, count_after
+        count_before = ObjectSpace.each_object(Vissen::Input::Message).count
+        broker.run_once
+        count_after = ObjectSpace.each_object(Vissen::Input::Message).count
+
+        assert_equal count_before + 1, count_after
+      end
     end
   end
 end
