@@ -10,17 +10,17 @@ N = 100_000
 # First we setup a broker.
 broker = Broker.new
 
-Counter = Struct.new :count do
+Counter = Struct.new :count, :limit do
   def call(_, _)
     self.count += 1
   end
 
-  def result
-    self.count.to_f / N * 100
+  def percent
+    count.to_f / limit * 100
   end
 end
 
-counter = Counter.new 0
+counter = Counter.new 0, N
 
 # Subscribe to some messages
 broker.subscribe(Message::Note[5, 1],        counter)
@@ -58,6 +58,6 @@ res =
   end
 
 puts
-puts format('%d messages processed (%0.1f%%)', counter.count, counter.result)
+puts format('%d messages processed (%0.1f%%)', counter.count, counter.percent)
 puts format('%.2f us per message', res.last.utime * (1_000_000 / N))
 puts format('%.0f messages per second', N / res.last.utime)
