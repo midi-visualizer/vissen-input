@@ -38,6 +38,9 @@ module Vissen
       # Match either a byte array or a `Message` against the rule stored in the
       # matcher.
       #
+      # @raise  [KeyError] if `obj` is a `Hash` but does not include the `:data`
+      #   key.
+      #
       # @param  obj [Hash, #to_a] the message data to match.
       # @return [true, false] true if the data matches.
       def match?(obj)
